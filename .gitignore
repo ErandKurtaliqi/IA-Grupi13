@@ -1,0 +1,9 @@
+﻿# Visual Studio / .NET
+.vs/
+.vscode/
+bin/
+obj/
+Debug*/
+Release*/
+*.user
+*.suo
