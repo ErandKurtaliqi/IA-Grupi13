@@ -11,7 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ILatinSquareSolverService, LatinSquareSolverService>();
-
+builder.Services.AddScoped<ISudokuService, SudokuService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
