@@ -1,0 +1,130 @@
+<div class="container">
+  <div class="header">
+    <h1>Latin Square Generator</h1>
+    <p>Generate an n×n grid filled with n different numbers, each appearing exactly once in every row and column.</p>
+  </div>
+
+  <div class="content-grid">
+    <div class="form-card">
+      <h2>Configuration</h2>
+      
+      <div class="form-group">
+        <label>Algorithm:</label>
+        <div class="algorithm-buttons">
+          <button 
+            class="algo-btn"
+            [class.active]="algorithm() === 'backtracking'"
+            (click)="algorithm.set('backtracking')">
+            Backtracking
+          </button>
+          <button 
+            class="algo-btn"
+            [class.active]="algorithm() === 'iddfs'"
+            (click)="algorithm.set('iddfs')">
+            IDDFS
+          </button>
+        </div>
+        <small>Iterative Deepening Depth-First Search</small>
+      </div>
+
+      <div class="form-group">
+        <label>Grid Size (n):</label>
+        <input 
+          type="number" 
+          [value]="n()" 
+          (input)="n.set(+$any($event.target).value)"
+          min="1"
+          max="12"
+        />
+        <small>Creates an n×n Latin Square</small>
+      </div>
+
+      <div class="info-box">
+        <h4>What is a Latin Square?</h4>
+        <p>A Latin Square is an n×n array filled with n different symbols, each occurring exactly once in each row and exactly once in each column.</p>
+      </div>
+
+      <button class="solve-btn" (click)="solve()" [disabled]="loading()">
+        @if (loading()) {
+          <span class="spinner"></span> Generating...
+        } @else {
+          Generate Square
+        }
+      </button>
+    </div>
+
+    <div class="results-card">
+      <h2>Results</h2>
+      
+      @if (error()) {
+        <div class="error">{{ error() }}</div>
+      }
+
+      @if (loading()) {
+        <div class="loading">
+          <div class="spinner-large"></div>
+          <p>Computing Latin Square...</p>
+        </div>
+      }
+
+      @if (result() && !loading()) {
+        <div class="result-info">
+          <div class="stat">
+            <span class="label">Grid Size:</span>
+            <span class="value">{{ result().n }} × {{ result().n }}</span>
+          </div>
+          <div class="stat">
+            <span class="label">Algorithm:</span>
+            <span class="value">{{ result().algorithm === 'iddfs' ? 'IDDFS' : 'Backtracking' }}</span>
+          </div>
+        </div>
+
+        @if (result().matrix) {
+          <div class="matrix-container">
+            <h3>Latin Square</h3>
+            <div class="latin-square" [style.grid-template-columns]="'repeat(' + result().n + ', 1fr)'">
+              @for (row of result().matrix; track $index) {
+                @for (cell of row; track $index) {
+                  <div 
+                    class="cell"
+                    [style.background-color]="getColorForValue(cell, result().n)">
+                    {{ cell }}
+                  </div>
+                }
+              }
+            </div>
+
+            <div class="validation-info">
+              <h4>Validation:</h4>
+              <div class="validation-checks">
+                <div class="check">
+                  <span class="icon">✓</span>
+                  <span>Each number appears once per row</span>
+                </div>
+                <div class="check">
+                  <span class="icon">✓</span>
+                  <span>Each number appears once per column</span>
+                </div>
+                <div class="check">
+                  <span class="icon">✓</span>
+                  <span>All numbers from 1 to {{ result().n }} are used</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="examples">
+              <h4>Example Pattern:</h4>
+              <p>For n=5, a typical Latin Square might look like:</p>
+              <pre class="example-text">5 1 2 3 4
+4 5 1 2 3
+3 4 5 1 2
+2 3 4 5 1
+1 2 3 4 5</pre>
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>
+

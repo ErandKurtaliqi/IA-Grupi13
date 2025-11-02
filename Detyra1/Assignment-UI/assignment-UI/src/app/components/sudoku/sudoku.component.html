@@ -1,0 +1,147 @@
+<div class="container">
+  <div class="header">
+    <h1>Sudoku Solver</h1>
+    <p>Solve Sudoku puzzles using BFS with Backtracking algorithm.</p>
+  </div>
+
+  <div class="mode-toggle">
+    <button 
+      class="toggle-btn" 
+      [class.active]="!customMode()"
+      (click)="customMode.set(false); result.set(null)">
+      Preset Puzzles
+    </button>
+    <button 
+      class="toggle-btn" 
+      [class.active]="customMode()"
+      (click)="customMode.set(true); result.set(null)">
+      Custom Puzzle
+    </button>
+  </div>
+
+  <div class="content-grid">
+    <div class="form-card">
+      <h2>Configuration</h2>
+      
+      @if (!customMode()) {
+        <div class="form-group">
+          <label>Difficulty Level:</label>
+          <div class="difficulty-buttons">
+            <button 
+              class="difficulty-btn"
+              [class.active]="difficulty() === 'Easy'"
+              (click)="difficulty.set('Easy')">
+              Easy
+            </button>
+            <button 
+              class="difficulty-btn"
+              [class.active]="difficulty() === 'Medium'"
+              (click)="difficulty.set('Medium')">
+              Medium
+            </button>
+            <button 
+              class="difficulty-btn"
+              [class.active]="difficulty() === 'Hard'"
+              (click)="difficulty.set('Hard')">
+              Hard
+            </button>
+          </div>
+        </div>
+      }
+
+      @if (customMode()) {
+        <div class="custom-input">
+          <p class="hint">Enter your Sudoku puzzle below (0 for empty cells):</p>
+          <div class="sudoku-grid editable">
+            @for (row of customGrid(); track $index; let i = $index) {
+              @for (cell of row; track $index; let j = $index) {
+                <input 
+                  type="text"
+                  class="sudoku-cell"
+                  [class.filled]="cell !== 0"
+                  [value]="cell === 0 ? '' : cell"
+                  (input)="updateCell(i, j, $any($event.target).value)"
+                  maxlength="1"
+                  pattern="[0-9]"
+                />
+              }
+            }
+          </div>
+          <button class="clear-btn" (click)="clearCustomGrid()">Clear Grid</button>
+        </div>
+      }
+
+      <button class="solve-btn" (click)="solve()" [disabled]="loading()">
+        @if (loading()) {
+          <span class="spinner"></span> Solving...
+        } @else {
+          Solve Puzzle
+        }
+      </button>
+    </div>
+
+    <div class="results-card">
+      <h2>Results</h2>
+      
+      @if (error()) {
+        <div class="error">{{ error() }}</div>
+      }
+
+      @if (loading()) {
+        <div class="loading">
+          <div class="spinner-large"></div>
+          <p>Computing solution...</p>
+        </div>
+      }
+
+      @if (result() && !loading()) {
+        <div class="result-info">
+          @if (result().difficulty) {
+            <div class="stat">
+              <span class="label">Difficulty:</span>
+              <span class="value">{{ result().difficulty }}</span>
+            </div>
+          }
+          <div class="stat">
+            <span class="label">Solving Time:</span>
+            <span class="value">{{ result().timeMs }}ms</span>
+          </div>
+        </div>
+
+        <div class="grids-container">
+          @if (result().original) {
+            <div class="grid-section">
+              <h3>Original Puzzle</h3>
+              <div class="sudoku-grid">
+                @for (row of result().original; track $index) {
+                  @for (cell of row; track $index) {
+                    <div class="sudoku-cell" [class.filled]="cell !== 0">
+                      {{ cell === 0 ? '' : cell }}
+                    </div>
+                  }
+                }
+              </div>
+            </div>
+          }
+
+          @if (result().solved) {
+            <div class="grid-section">
+              <h3>Solution</h3>
+              <div class="sudoku-grid">
+                @for (row of result().solved; track $index; let i = $index) {
+                  @for (cell of row; track $index; let j = $index) {
+                    <div class="sudoku-cell filled" 
+                         [class.original]="result().original && result().original[i][j] !== 0">
+                      {{ cell === 0 ? '' : cell }}
+                    </div>
+                  }
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,96 @@
+<div class="home-container">
+  <div class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">AI Search Algorithms</h1>
+      <p class="hero-subtitle">Uninformed Search Techniques</p>
+      <p class="hero-description">
+        Explore classic artificial intelligence problems solved with fundamental search algorithms.
+        Choose a problem below to see how DFS, BFS, IDDFS, and Backtracking work in practice.
+      </p>
+    </div>
+  </div>
+
+  <div class="problems-section">
+    <div class="section-header">
+      <h2>Choose a Problem</h2>
+      <p>Select one of the three problems to explore different search techniques</p>
+    </div>
+
+    <div class="problems-grid">
+      @for (problem of problems; track problem.title) {
+        <a [routerLink]="problem.route" class="problem-card">
+          <div class="card-icon" [style.background]="problem.color">
+            {{ problem.icon }}
+          </div>
+          <h3>{{ problem.title }}</h3>
+          <p class="card-description">{{ problem.description }}</p>
+          <div class="algorithms">
+            @for (algo of problem.algorithms; track algo) {
+              <span class="algorithm-badge">{{ algo }}</span>
+            }
+          </div>
+          <div class="card-footer">
+            <span class="explore-link">Explore →</span>
+          </div>
+        </a>
+      }
+    </div>
+  </div>
+
+  <div class="features-section">
+    <div class="section-header">
+      <h2>Features</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h4>Real-time Solving</h4>
+        <p>Watch algorithms solve problems in real-time with instant visual feedback</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h4>Performance Metrics</h4>
+        <p>View execution time and nodes explored to understand algorithm efficiency</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <h4>Visual Results</h4>
+        <p>See solutions displayed in intuitive, color-coded visualizations</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚙️</div>
+        <h4>Configurable</h4>
+        <p>Adjust parameters and test different scenarios for each problem</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="algorithms-section">
+    <div class="section-header">
+      <h2>Search Algorithms Used</h2>
+    </div>
+    <div class="algorithms-list">
+      <div class="algo-item">
+        <div class="algo-name">DFS</div>
+        <div class="algo-full">Depth-First Search</div>
+      </div>
+      <div class="algo-item">
+        <div class="algo-name">BFS</div>
+        <div class="algo-full">Breadth-First Search</div>
+      </div>
+      <div class="algo-item">
+        <div class="algo-name">DLS</div>
+        <div class="algo-full">Depth Limited Search</div>
+      </div>
+      <div class="algo-item">
+        <div class="algo-name">IDDFS</div>
+        <div class="algo-full">Iterative Deepening DFS</div>
+      </div>
+      <div class="algo-item">
+        <div class="algo-name">Backtracking</div>
+        <div class="algo-full">Systematic Exploration</div>
+      </div>
+    </div>
+  </div>
+</div>
+

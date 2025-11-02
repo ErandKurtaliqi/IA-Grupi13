@@ -13,6 +13,19 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ILatinSquareSolverService, LatinSquareSolverService>();
 builder.Services.AddScoped<ISudokuService, SudokuService>();
 builder.Services.AddScoped<ISocialGolfersService, SocialGolfersService>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
+                  .AllowAnyMethod()
+                  .AllowAnyHeader()
+                  .AllowCredentials();
+        });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -23,6 +36,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAngularApp");
+
+
 
 app.UseAuthorization();
 

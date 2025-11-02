@@ -1,0 +1,36 @@
+<div class="app-container">
+  <nav class="navbar">
+    <div class="nav-content">
+      <a routerLink="/" class="nav-brand">
+        <div class="logo">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 2l-1.5 4.5L3 8l4.5 1.5L9 14l1.5-4.5L15 8l-4.5-1.5L9 2zm0 6.83L8.5 10 7.17 9.5 8.5 9 9 7.67 9.5 9l1.33.5L9.5 10 9 8.83zM19 10l-.83 2.5L16 13l2.17.5L19 16l.83-2.5L22 13l-2.17-.5L19 10zm-1.33 3l.83.25.25.83.25-.83.83-.25-.83-.25-.25-.83-.25.83-.83.25zm-2.84-7L13 10l-.83-2.5L10 7l2.17-.5L13 4l.83 2.5L16 7l-2.17.5z"/>
+          </svg>
+          <span class="brand-text">{{ title }}</span>
+        </div>
+      </a>
+      <div class="nav-links">
+        <a routerLink="/social-golfers" routerLinkActive="active" class="nav-link">
+          Social Golfers
+        </a>
+        <a routerLink="/sudoku" routerLinkActive="active" class="nav-link">
+          Sudoku Solver
+        </a>
+        <a routerLink="/latin-square" routerLinkActive="active" class="nav-link">
+          Latin Square
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <router-outlet />
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <p>AI Search Algorithms - Uninformed Search Techniques</p>
+      <p class="algorithms">DFS • BFS • IDDFS • Depth Limited Search • Backtracking</p>
+    </div>
+  </footer>
+</div>
