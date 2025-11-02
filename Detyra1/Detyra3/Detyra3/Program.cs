@@ -12,6 +12,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ILatinSquareSolverService, LatinSquareSolverService>();
 builder.Services.AddScoped<ISudokuService, SudokuService>();
+builder.Services.AddScoped<ISocialGolfersService, SocialGolfersService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
