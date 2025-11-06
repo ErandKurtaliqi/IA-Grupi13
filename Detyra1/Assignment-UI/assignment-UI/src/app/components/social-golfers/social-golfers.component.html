@@ -13,7 +13,6 @@
         <select [(ngModel)]="algorithm" (change)="algorithm.set($any($event.target).value)">
           <option value="dfs">DFS with Backtracking</option>
           <option value="depth-limited">Depth Limited Search</option>
-          <option value="find-max">Find Maximum Weeks</option>
         </select>
       </div>
 
@@ -39,17 +38,15 @@
         />
       </div>
 
-      @if (algorithm() !== 'find-max') {
-        <div class="form-group">
-          <label>Number of Weeks:</label>
-          <input 
-            type="number" 
-            [value]="numWeeks()" 
-            (input)="numWeeks.set(+$any($event.target).value)"
-            min="1"
-          />
-        </div>
-      }
+      <div class="form-group">
+        <label>Number of Weeks:</label>
+        <input 
+          type="number" 
+          [value]="numWeeks()" 
+          (input)="numWeeks.set(+$any($event.target).value)"
+          min="1"
+        />
+      </div>
 
       @if (algorithm() === 'depth-limited') {
         <div class="form-group">
@@ -63,17 +60,6 @@
         </div>
       }
 
-      @if (algorithm() === 'find-max') {
-        <div class="form-group">
-          <label>Max Weeks to Try:</label>
-          <input 
-            type="number" 
-            [value]="maxWeeksToTry()" 
-            (input)="maxWeeksToTry.set(+$any($event.target).value)"
-            min="1"
-          />
-        </div>
-      }
 
       <button class="solve-btn" (click)="solve()" [disabled]="loading()">
         @if (loading()) {
@@ -100,37 +86,25 @@
 
       @if (result() && !loading()) {
         <div class="result-info">
-          @if (algorithm() !== 'find-max') {
-            <div class="stat">
-              <span class="label">Algorithm:</span>
-              <span class="value">{{ result().algorithm }}</span>
-            </div>
-            <div class="stat">
-              <span class="label">Status:</span>
-              <span class="value" [class.success]="result().success" [class.fail]="!result().success">
-                {{ result().success ? '✓ Success' : '✗ No Solution' }}
-              </span>
-            </div>
-            <div class="stat">
-              <span class="label">Time:</span>
-              <span class="value">{{ result().timeMs }}ms</span>
-            </div>
-            <div class="stat">
-              <span class="label">Nodes Explored:</span>
-              <span class="value">{{ result().nodesExplored?.toLocaleString() || 'N/A' }}</span>
-            </div>
-          }
+          <div class="stat">
+            <span class="label">Algorithm:</span>
+            <span class="value">{{ result().algorithm }}</span>
+          </div>
+          <div class="stat">
+            <span class="label">Status:</span>
+            <span class="value" [class.success]="result().success" [class.fail]="!result().success">
+              {{ result().success ? '✓ Success' : '✗ No Solution' }}
+            </span>
+          </div>
+          <div class="stat">
+            <span class="label">Time:</span>
+            <span class="value">{{ result().timeMs }}ms</span>
+          </div>
+          <div class="stat">
+            <span class="label">Nodes Explored:</span>
+            <span class="value">{{ result().nodesExplored?.toLocaleString() || 'N/A' }}</span>
+          </div>
 
-          @if (algorithm() === 'find-max') {
-            <div class="stat">
-              <span class="label">Maximum Weeks Found:</span>
-              <span class="value success">{{ result().maxWeeksFound }}</span>
-            </div>
-            <div class="stat">
-              <span class="label">Message:</span>
-              <span class="value">{{ result().message }}</span>
-            </div>
-          }
         </div>
 
         @if (result().success && result().solution) {
@@ -152,18 +126,6 @@
           </div>
         }
 
-        @if (algorithm() === 'find-max' && result().attempts) {
-          <div class="attempts">
-            <h3>Attempts:</h3>
-            <div class="attempts-grid">
-              @for (attempt of result().attempts; track attempt.weeks) {
-                <div class="attempt" [class.success]="attempt.success" [class.fail]="!attempt.success">
-                  Week {{ attempt.weeks }}: {{ attempt.success ? '✓' : '✗' }}
-                </div>
-              }
-            </div>
-          </div>
-        }
       }
     </div>
   </div>

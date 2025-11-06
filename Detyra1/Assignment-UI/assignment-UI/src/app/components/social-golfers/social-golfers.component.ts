@@ -15,9 +15,8 @@ export class SocialGolfersComponent {
   groupSize = signal(4);
   numWeeks = signal(5);
   depthLimit = signal(6);
-  maxWeeksToTry = signal(15);
   
-  algorithm = signal<'dfs' | 'depth-limited' | 'find-max'>('dfs');
+  algorithm = signal<'dfs' | 'depth-limited'>('dfs');
   loading = signal(false);
   result = signal<any>(null);
   error = signal<string>('');
@@ -62,22 +61,7 @@ export class SocialGolfersComponent {
           this.loading.set(false);
         }
       });
-    } else {
-      this.apiService.findMaxWeeks(
-        this.numPlayers(), 
-        this.groupSize(),
-        this.maxWeeksToTry()
-      ).subscribe({
-        next: (data) => {
-          this.result.set(data);
-          this.loading.set(false);
-        },
-        error: (err) => {
-          this.error.set(err.error?.message || 'An error occurred');
-          this.loading.set(false);
-        }
-      });
-    }
   }
 }
 
+}
