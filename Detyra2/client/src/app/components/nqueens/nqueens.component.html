@@ -1,0 +1,80 @@
+<app-navbar></app-navbar>
+<div class="container">
+  <h1 class="title">🎯 Blocked N-Queens Problem (A* Algorithm)</h1>
+  
+  <div class="content-wrapper">
+    <div class="controls-section">
+      <h2>Configuration</h2>
+      
+      <div class="form-group">
+        <label>Board Size (N):</label>
+        <input type="number" [(ngModel)]="n" min="4" max="20" class="input" />
+      </div>
+
+      <div class="form-group">
+        <label>Heuristic:</label>
+        <select [(ngModel)]="heuristicType" class="select">
+          <option value="conflicts">Conflicts (Basic)</option>
+          <option value="attacking">Attacking Pairs</option>
+          <option value="combined">Combined (Admissible)</option>
+        </select>
+      </div>
+
+      <div class="blocked-section">
+        <h3>Blocked Positions</h3>
+        <div class="form-row">
+          <input type="number" [(ngModel)]="blockRow" placeholder="Row" min="0" [max]="n-1" class="input-small" />
+          <input type="number" [(ngModel)]="blockCol" placeholder="Col" min="0" [max]="n-1" class="input-small" />
+          <button (click)="addBlockedPosition()" class="btn btn-secondary">Add</button>
+        </div>
+        
+        <div class="blocked-list" *ngIf="blockedPositions.length > 0">
+          <div *ngFor="let pos of blockedPositions; let i = index" class="blocked-item">
+            <span>({{pos.row}}, {{pos.col}})</span>
+            <button (click)="removeBlockedPosition(i)" class="btn-remove">×</button>
+          </div>
+          <button (click)="clearBlocked()" class="btn btn-danger">Clear All</button>
+        </div>
+      </div>
+
+      <button (click)="solve()" [disabled]="isLoading" class="btn btn-primary">
+        {{ isLoading ? 'Solving...' : 'Solve' }}
+      </button>
+
+      <div class="results" *ngIf="showSolution || message">
+        <h3>Results</h3>
+        <div class="result-item" *ngIf="showSolution">
+          <span class="label">Status:</span>
+          <span class="value success">{{ solution.length > 0 ? '✓ Solution Found' : '✗ No Solution' }}</span>
+        </div>
+        <div class="result-item" *ngIf="nodesExplored > 0">
+          <span class="label">Nodes Explored:</span>
+          <span class="value">{{ nodesExplored }}</span>
+        </div>
+        <div class="result-item" *ngIf="executionTime > 0">
+          <span class="label">Execution Time:</span>
+          <span class="value">{{ executionTime.toFixed(2) }} ms</span>
+        </div>
+        <div class="message" *ngIf="message">{{ message }}</div>
+      </div>
+    </div>
+
+    <div class="board-section">
+      <h2>Chessboard</h2>
+      <div class="board" [style.grid-template-columns]="'repeat(' + n + ', 1fr)'">
+        <div *ngFor="let row of getRange(n)" class="board-row">
+          <div *ngFor="let col of getRange(n)" 
+               class="cell"
+               [class.white]="(row + col) % 2 === 0"
+               [class.black]="(row + col) % 2 === 1"
+               [class.queen]="isQueen(row, col)"
+               [class.blocked]="isBlocked(row, col)">
+            <span *ngIf="isQueen(row, col)" class="queen-icon">♛</span>
+            <span *ngIf="isBlocked(row, col)" class="blocked-icon">✖</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
