@@ -2,6 +2,7 @@
   <div class="header">
     <h1>{{ title }}</h1>
     <p class="subtitle">Endgame Analysis using MiniMax Algorithm with Alpha-Beta Pruning</p>
+    <p class="fen-display">FEN: {{ fen }}</p>
   </div>
 
   <div class="main-content">
@@ -14,25 +15,40 @@
         </div>
       </div>
 
-      <div class="chess-board">
-        <div class="board-row" *ngFor="let row of board; let i = index">
-          <div class="rank-label">{{ 8 - i }}</div>
-          <div 
-            class="square" 
-            *ngFor="let piece of row; let j = index"
-            [class.light]="getSquareColor(i, j) === 'light'"
-            [class.dark]="getSquareColor(i, j) === 'dark'"
-            [class.white-piece]="isWhitePiece(piece)"
-            [class.black-piece]="!isWhitePiece(piece) && piece !== '.'"
-          >
-            <span class="piece">{{ getPieceSymbol(piece) }}</span>
+      <div class="board-wrapper">
+        <div class="chess-board">
+          <div class="board-row" *ngFor="let row of board; let i = index">
+            <div class="rank-label">{{ 8 - i }}</div>
+            <div 
+              class="square" 
+              *ngFor="let piece of row; let j = index"
+              [class]="getSquareClass(i, j)"
+              [class.white-piece]="isWhitePiece(piece)"
+              [class.black-piece]="!isWhitePiece(piece) && piece !== '.'"
+              [class.dragging]="draggingPiece?.row === i && draggingPiece?.col === j"
+              [attr.draggable]="isDraggable(i, j)"
+              (click)="onSquareClick(i, j)"
+              (dragstart)="onDragStart($event, i, j)"
+              (dragover)="onDragOver($event, i, j)"
+              (drop)="onDrop($event, i, j)"
+              (dragend)="onDragEnd($event)"
+            >
+              <span class="piece" *ngIf="piece !== '.'">{{ getPieceSymbol(piece) }}</span>
+              <div class="legal-move-dot" *ngIf="getHighlightType(i, j) === 'legal'"></div>
+              <div class="capture-ring" *ngIf="getHighlightType(i, j) === 'capture'"></div>
+            </div>
+          </div>
+          <div class="file-labels">
+            <div class="file-spacer"></div>
+            <span class="file-label" *ngFor="let file of ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']">
+              {{ file }}
+            </span>
           </div>
         </div>
-        <div class="file-labels">
-          <span class="file-label" *ngFor="let file of ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']">
-            {{ file }}
-          </span>
-        </div>
+      </div>
+
+      <div class="interaction-hint">
+        <span>💡 Click or drag pieces to make moves</span>
       </div>
 
       <!-- Controls -->
@@ -69,6 +85,10 @@
             <span *ngIf="loading">⏳ Analyzing...</span>
           </button>
           
+          <button (click)="makeBestMove()" [disabled]="loading || !analysis?.bestMoveNotation" class="btn btn-best-move">
+            🎯 Play Best Move
+          </button>
+          
           <button (click)="switchTurn()" [disabled]="loading" class="btn btn-secondary">
             🔄 Switch Turn
           </button>
@@ -94,7 +114,7 @@
         <p>{{ error }}</p>
       </div>
 
-      <div *ngIf="analysis && !loading" class="analysis-results">
+      <div *ngIf="analysis && !loading && viewMode === 'single'" class="analysis-results">
         <!-- Evaluation Bar -->
         <div class="evaluation-section">
           <h3>Position Evaluation</h3>
@@ -136,13 +156,16 @@
         <div class="top-moves-section" *ngIf="analysis.topMoves.length > 0">
           <h3>🏆 Top Moves</h3>
           <div class="moves-list">
-            <div class="move-item" *ngFor="let move of analysis.topMoves; let i = index">
+            <div class="move-item" *ngFor="let move of analysis.topMoves; let i = index"
+                 [class.best-move]="i === 0"
+                 [class.draw-move]="move.evaluationDescription.includes('Equal')"
+                 [class.losing-move]="move.evaluationDescription.includes('Black')">
               <div class="move-rank">{{ i + 1 }}</div>
               <div class="move-info">
                 <div class="move-name">{{ move.notation }}</div>
                 <div class="move-eval-desc">{{ move.evaluationDescription }}</div>
               </div>
-              <div class="move-score" [style.color]="move.evaluation > 0 ? '#4caf50' : '#f44336'">
+              <div class="move-score" [style.color]="move.evaluation > 0 ? '#4caf50' : move.evaluation < 0 ? '#f44336' : '#ff9800'">
                 {{ formatEvaluation(move.evaluation) }}
               </div>
             </div>
@@ -176,7 +199,7 @@
       </div>
 
       <!-- Both Scenarios Analysis -->
-      <div *ngIf="bothAnalysis && !loading" class="analysis-results">
+      <div *ngIf="bothAnalysis && !loading && viewMode === 'both'" class="analysis-results">
         <div class="both-scenarios-header">
           <h3>⚔️ Analiza e të dy rasteve - MiniMax Algorithm</h3>
           <p class="scenario-subtitle">White to move vs Black to move</p>
@@ -259,5 +282,6 @@
 
   <div class="footer">
     <p>IA - Detyra 3 | MiniMax Algorithm with Alpha-Beta Pruning | Grupi 13</p>
+    <p class="reference">Reference: <a href="https://syzygy-tables.info/?fen=2n1k3/8/3q4/8/2N2Q2/8/8/4K3_w_-_-_0_1" target="_blank">Syzygy Endgame Tablebases</a></p>
   </div>
 </div>

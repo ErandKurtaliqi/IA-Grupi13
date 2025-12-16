@@ -237,7 +237,8 @@ namespace API.Services
         private void GeneratePawnMoves(ChessBoard board, int row, int col, char piece, List<Move> moves)
         {
             bool isWhite = IsWhitePiece(piece);
-            int direction = isWhite ? 1 : -1;
+            // White pawns move UP the board (decreasing row index), Black pawns move DOWN (increasing row index)
+            int direction = isWhite ? -1 : 1;
 
             // Forward move
             int newRow = row + direction;
@@ -246,7 +247,8 @@ namespace API.Services
                 moves.Add(new Move(row, col, newRow, col, piece));
 
                 // Double move from starting position
-                int startRow = isWhite ? 1 : 6;
+                // White pawns start at row 6 (rank 2), Black pawns start at row 1 (rank 7)
+                int startRow = isWhite ? 6 : 1;
                 int doubleRow = row + 2 * direction;
                 if (row == startRow && board.Board[doubleRow, col] == '.')
                 {
