@@ -68,6 +68,11 @@
   background: rgba(255, 255, 255, 0.15);
 }
 
+.select option {
+  background: rgba(255, 255, 255, 0.1);
+  color: black;
+}
+
 .blocked-section {
   margin: 1.5rem 0;
   padding: 1.5rem;
